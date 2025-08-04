@@ -1,0 +1,42 @@
+import sys
+import pygame
+from setting import Settings
+from ship import Ship
+class AlienInvasion:
+    #创建对象时会自动调用一次 属于类的构造函数
+    def __init__(self):
+        pygame.init()
+        self.settings = Settings()
+        self.screen = pygame.display.set_mode(
+            (self.settings.screen_width, self.settings.screen_height))
+        pygame.display.set_caption("Alien Invasion")
+        self.ship = Ship(self)
+    # class AlienInvasion:
+    #     def __init__(self):
+    #         settings = Settings()        # 普通变量，只在 __init__ 这个函数里能用
+    #         self.settings = Settings()   # 实例属性，整个对象中都能用
+    #
+    #     def run_game(self):
+    #         print(self.settings.bg_color)  # ✅ 正确，self.settings 可以访问
+    #         # print(settings.bg_color)     # ❌ 报错，这里访问不到 settings
+
+    def run_game(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+            #每次循环都重绘屏幕
+            self.screen.fill(self.settings.bg_color)
+            self.ship.blitme()  #绘制飞船
+            #让最近绘制的屏幕可见
+            pygame.display.flip()
+
+
+#只有运行该文件时，才会进行以下行为
+#（）内定义时要写，但调用时不用写，调用时会自动传入ai
+if __name__ == "__main__":
+    ai = AlienInvasion()
+    ai.run_game()
+
+
+
