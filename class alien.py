@@ -22,15 +22,25 @@ class AlienInvasion:
 
     def run_game(self):
         while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-            #每次循环都重绘屏幕
-            self.screen.fill(self.settings.bg_color)
-            self.ship.blitme()  #绘制飞船
-            #让最近绘制的屏幕可见
-            pygame.display.flip()
+            self._check_events()
+            self._update_screen()
 
+    #实例方法的第一个参数必须是self,只有有了它，方法内部才能访问实例属性和其他方法。
+    def _check_events(self):
+        #响应鼠标按键
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    #向右移动
+                    self.ship.rect.x += 1
+    def _update_screen(self):
+        # 每次循环都重绘屏幕
+        self.screen.fill(self.settings.bg_color)
+        self.ship.blitme()  # 绘制飞船
+        # 让最近绘制的屏幕可见
+        pygame.display.flip()
 
 #只有运行该文件时，才会进行以下行为
 #（）内定义时要写，但调用时不用写，调用时会自动传入ai
