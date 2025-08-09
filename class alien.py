@@ -23,6 +23,7 @@ class AlienInvasion:
     def run_game(self):
         while True:
             self._check_events()
+            self.ship.update()
             self._update_screen()
 
     #实例方法的第一个参数必须是self,只有有了它，方法内部才能访问实例属性和其他方法。
@@ -34,7 +35,19 @@ class AlienInvasion:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     #向右移动
-                    self.ship.rect.x += 1
+                    # self.ship.rect.x += 1
+                    self.ship.moving_right = True
+                elif event.key == pygame.K_LEFT:
+                    #向左移动
+                    # self.ship.rect.x -= 1
+                    self.ship.moving_left = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    #停止向右移动
+                    # self.ship.rect.x -= 1
+                    self.ship.moving_right = False
+                elif event.key == pygame.K_LEFT:
+                    self.ship.moving_left = False
     def _update_screen(self):
         # 每次循环都重绘屏幕
         self.screen.fill(self.settings.bg_color)
