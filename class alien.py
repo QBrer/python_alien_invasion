@@ -2,6 +2,7 @@ import sys
 import pygame
 from setting import Settings
 from ship import Ship
+from bullet import Bullet
 class AlienInvasion:
     #创建对象时会自动调用一次 属于类的构造函数
     def __init__(self):
@@ -11,6 +12,7 @@ class AlienInvasion:
             (self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
         self.ship = Ship(self)
+        self.bullets = pygame.sprite.Group()  # 创建一个子弹编组
     # class AlienInvasion:
     #     def __init__(self):
     #         settings = Settings()        # 普通变量，只在 __init__ 这个函数里能用
@@ -25,6 +27,12 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self._update_screen()
+            self.bullets.update()  # 更新子弹位置
+            # 删除已经消失的子弹
+            for bullet in self.bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    self.bullets.remove(bullet)
+            print(len(self.bullets))
 
     #实例方法的第一个参数必须是self,只有有了它，方法内部才能访问实例属性和其他方法。
     def _check_events(self):
@@ -63,6 +71,8 @@ class AlienInvasion:
             self.ship.moving_left = True
         elif event.key == pygame.K_q:
             sys.exit()
+        elif event.key == pygame.K_SPACE:
+            self._fire_bullet()
 
     def _check_keyup_events(self, event):
         """响应按键松开事件"""
@@ -72,10 +82,17 @@ class AlienInvasion:
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
 
+    def _fire_bullet(self):
+        """创建一颗子弹并将其加入编组"""
+        new_bullet = Bullet(self)
+        self.bullets.add(new_bullet)
+
     def _update_screen(self):
         # 每次循环都重绘屏幕
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()  # 绘制飞船
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
         # 让最近绘制的屏幕可见
         pygame.display.flip()
 
